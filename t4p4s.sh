@@ -711,6 +711,8 @@ if [ "$(optvalue p4)" != off ]; then
     exit_on_error "$?" "P4 to C compilation $(cc 2)failed$nn"
 fi
 
+find $T4P4S_SRCGEN_DIR -type f -name "*.c" -exec sed -i 's/(  & /(/g' {} +
+
 
 # Phase 2: C compilation
 if [ "$(optvalue c)" != off ]; then
