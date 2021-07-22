@@ -99,12 +99,36 @@ for ctl in hlir.controls:
     #} }
     #[
 
+#[ void parser_set_ingress_global_timestamp(STDPARAMS) {
+#[      struct timespec ts;
+#[      clock_gettime( CLOCK_REALTIME, &ts);
+#[      uint64_t ts_ns = ts.tv_sec * (uint64_t)1000000000L + ts.tv_nsec;
+#[      uint32_t tmp[2];
+#[      tmp[0] = ts_ns & 0xffffffff;
+#[      tmp[1] = (ts_ns >> 32) & 0xffffffff;
+#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_ingress_tstamp_system_h0)}}, 0,  tmp[1], 32);
+#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_ingress_tstamp_system_l1)}}, 0,  tmp[0], 32);
+#[ }
+
+#[ void parser_set_egress_global_timestamp(STDPARAMS) {
+#[      struct timespec ts;
+#[      clock_gettime( CLOCK_REALTIME, &ts);
+#[      uint64_t ts_ns = ts.tv_sec * (uint64_t)1000000000L + ts.tv_nsec;
+#[      uint32_t tmp[2];
+#[      tmp[0] = ts_ns & 0xffffffff;
+#[      tmp[1] = (ts_ns >> 32) & 0xffffffff;
+#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_egress_tstamp_system_h2)}}, 0,  tmp[1], 32);
+#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_egress_tstamp_system_l3)}}, 0,  tmp[0], 32);
+#[ }
+
 #[ void process_packet(STDPARAMS)
 #{ {
 for idx, ctl in enumerate(hlir.controls):
     if len(ctl.body.components) == 0:
         #[     // skipping empty control ${ctl.name}
     else:
+        if ctl.name == 'egress':
+            #[     parser_set_egress_global_timestamp(STDPARAMS_IN);            
         #[     control_${ctl.name}(STDPARAMS_IN);
 
     if hlir.news.model == 'V1Switch' and idx == 1:
@@ -257,6 +281,7 @@ pkt_name_indent = " " * longest_hdr_name_len
 #[
 #[     reset_headers(SHORT_STDPARAMS_IN);
 #[     set_handle_packet_metadata(pd, portid);
+#[     parser_set_ingress_global_timestamp(STDPARAMS_IN);
 #[
 #[     dbg_bytes(pd->data, packet_length(pd), "Handling packet " T4LIT(#%03d) " (port " T4LIT(%d,port) ", $${}{%02dB}): ", pkt_idx, extract_ingress_port(pd), packet_length(pd));
 #[
