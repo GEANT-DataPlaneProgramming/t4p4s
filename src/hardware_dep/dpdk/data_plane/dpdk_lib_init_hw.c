@@ -33,6 +33,10 @@ uint16_t t4p4s_nb_txd = RTE_TEST_TX_DESC_DEFAULT;
 #define T4P4S_RTE_RSS_HF (ETH_RSS_IPV4 | ETH_RSS_NONFRAG_IPV4_TCP | ETH_RSS_NONFRAG_IPV4_UDP | ETH_RSS_IPV6 | ETH_RSS_NONFRAG_IPV6_TCP | ETH_RSS_NONFRAG_IPV6_UDP | ETH_RSS_IPV6_EX | ETH_RSS_IPV6_TCP_EX | ETH_RSS_IPV6_UDP_EX)
 #endif
 
+#ifndef T4P4S_RTE_RSS_HF_INTEL
+#define T4P4S_RTE_RSS_HF_INTEL (ETH_RSS_NONFRAG_IPV4_TCP | ETH_RSS_NONFRAG_IPV4_UDP | ETH_RSS_NONFRAG_IPV6_TCP | ETH_RSS_NONFRAG_IPV6_UDP)
+#endif
+
 struct rte_eth_conf port_conf = {
 #ifndef T4P4S_VETH_MODE
     .rxmode = {
@@ -209,6 +213,14 @@ void dpdk_init_port(uint8_t nb_ports, uint32_t nb_lcores, uint8_t portid) {
     #endif
     debug(" :::: Creating queues: nb_rxq=%d nb_txq=%u\n",
           nb_rx_queue, (unsigned)n_tx_queue );
+
+	struct rte_eth_dev_info dev_info;
+	rte_eth_dev_info_get (portid, &dev_info);
+	if (!strcmp("net_i40e", dev_info.driver_name)) {
+		port_conf.rx_adv_conf.rss_conf.rss_hf = T4P4S_RTE_RSS_HF_INTEL;
+	}
+
+
     int ret = rte_eth_dev_configure(portid, nb_rx_queue,
                                 (uint16_t)n_tx_queue, &port_conf);
     if (ret < 0)
