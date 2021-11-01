@@ -219,7 +219,12 @@ void dpdk_init_port(uint8_t nb_ports, uint32_t nb_lcores, uint8_t portid) {
 	if (!strcmp("net_i40e", dev_info.driver_name)) {
 		port_conf.rx_adv_conf.rss_conf.rss_hf = T4P4S_RTE_RSS_HF_INTEL;
 	}
-
+	
+	if (!strcmp("net_virtio", dev_info.driver_name)) {
+		port_conf.rxmode.offloads = 0xc;
+		port_conf.rx_adv_conf.rss_conf.rss_hf = 0x0;
+		port_conf.rxmode.mq_mode = ETH_MQ_RX_NONE;
+	}
 
     int ret = rte_eth_dev_configure(portid, nb_rx_queue,
                                 (uint16_t)n_tx_queue, &port_conf);
