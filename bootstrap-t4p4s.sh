@@ -281,7 +281,7 @@ if [ "$INSTALL_STAGE2_DPDK" == "yes" ]; then
     fi
 
     DPDK_FILEVSN="$DPDK_VSN"
-    [ "${vsn[0]}" != "-1" ] && DPDK_FILEVSN="$DPDK_VSN.${vsn[0]}"
+    #[ "${vsn[0]}" != "-1" ] && DPDK_FILEVSN="$DPDK_VSN.${vsn[0]}"
 fi
 
 
