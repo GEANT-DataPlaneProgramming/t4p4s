@@ -226,6 +226,9 @@ void dpdk_init_port(uint8_t nb_ports, uint32_t nb_lcores, uint8_t portid) {
 		port_conf.rxmode.mq_mode = ETH_MQ_RX_NONE;
 	}
 
+	printf("DEBUG: %s\n", dev_info.driver_name);
+	if(!strcmp(dev_info.driver_name, "net_ice"))
+		port_conf.rx_adv_conf.rss_conf.rss_hf = 0x7ef8;
     int ret = rte_eth_dev_configure(portid, nb_rx_queue,
                                 (uint16_t)n_tx_queue, &port_conf);
     if (ret < 0)
