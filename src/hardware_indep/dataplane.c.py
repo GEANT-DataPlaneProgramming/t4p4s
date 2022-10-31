@@ -106,8 +106,8 @@ for ctl in hlir.controls:
 #[      uint32_t tmp[2];
 #[      tmp[0] = ts_ns & 0xffffffff;
 #[      tmp[1] = (ts_ns >> 32) & 0xffffffff;
-#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_ingress_tstamp_system_h0)}}, 0,  tmp[1], 32);
-#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_ingress_tstamp_system_l1)}}, 0,  tmp[0], 32);
+#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_ingress_tstamp_system_h1)}}, 0,  tmp[1], 32);
+#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_ingress_tstamp_system_l2)}}, 0,  tmp[0], 32);
 #[ }
 
 #[ void parser_set_egress_global_timestamp(STDPARAMS) {
@@ -117,8 +117,8 @@ for ctl in hlir.controls:
 #[      uint32_t tmp[2];
 #[      tmp[0] = ts_ns & 0xffffffff;
 #[      tmp[1] = (ts_ns >> 32) & 0xffffffff;
-#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_egress_tstamp_system_h2)}}, 0,  tmp[1], 32);
-#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_egress_tstamp_system_l3)}}, 0,  tmp[0], 32);
+#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_egress_tstamp_system_h3)}}, 0,  tmp[1], 32);
+#[      set_field((fldT[]){{pd, HDR(all_metadatas), FLD(all_metadatas,_egress_tstamp_system_l4)}}, 0,  tmp[0], 32);
 #[ }
 
 #[ void process_packet(STDPARAMS)
